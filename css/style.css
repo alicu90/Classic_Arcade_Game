@@ -1,0 +1,77 @@
+body {
+    text-align: center;
+    margin: 0;
+}
+
+.popUpMessage {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 99999;
+    opacity: 0;
+    transition: opacity 400ms ease-in;
+    pointer-events: none;
+}
+
+.popUpMessage:target{
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.popUpMessage > div {
+    width: 400px;
+    position: relative;
+    margin: 10% auto;
+    padding: 5px 20px 13px 20px;
+    border-radius: 5px;
+    background: #fff
+}
+
+.inchide {
+    background: gray;
+    color: black;
+    line-height: 20px;
+    position: absolute;
+    right: -12px;
+    text-align: center;
+    top: -10px;
+    width: 24px;
+    text-decoration: none;
+    box-shadow: 1px 1px 3px #000;
+}
+
+.inchide:hover {
+    background: white;
+}
+
+.ribbon {
+    background-color: #0AAEFF;
+    overflow: hidden;
+    white-space: nowrap;
+    position: absolute;
+    left: -50px;
+    top: 30px;
+    -webkit-transform: rotate(-45deg);
+       -moz-transform: rotate(-45deg);
+       -ms-transform: rotate(-45deg);
+       -o-transform: rotate(-45deg);
+       transform: rotate((-45deg);
+    -webkit-box-shadow: 0 0 10px #888;
+    -moz-box-shadow:  0 10px #888;
+    box-shadow:  0 10px #888;
+}
+
+.ribbon a {
+    border: 1px solid #ADFF17;
+    color: #ADFF17;
+    display: block;
+    font: bold;
+    margin: 1px 0;
+    padding: 10px 50px;
+    text-align: center;
+    text-decoration: none;
+    text-shadow: 0 0 5px #444;
+}
