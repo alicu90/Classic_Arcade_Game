@@ -2,7 +2,7 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>Classic Arcade Game: Frogger</title>
+    <title>Arcade Game Project</title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -10,10 +10,19 @@
         <div>
             <a href="#inchide" title="Inchide" class="inchide">X</a>
             <h2>Will you survive?</h2>
-            <p>The skope of this game is to arrive to the river and to not have collision with the bugs.</p>
+            <p>The scope of this game is to arrive to the river and to not have collision with the bugs.</p>
             <p>You have to use arrow keys to move the player.</p>
         </div>
     </div>
+    <main class="game-container">
+        <section class="info">
+            <ul>
+                <li>Lives: <span id="lives"></span></li>
+                <li>Score: <span id="score"></span></li>
+            </ul> 
+        </section>
+        <canvas id="canvas"></canvas>
+    </main>
     <script src="js/resources.js"></script>
     <script src="js/app.js"></script>
     <script src="js/engine.js"></script>
