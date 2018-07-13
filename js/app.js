@@ -1,6 +1,4 @@
-var allEnemies = [];
-var player;
-var score = 0;
+"use strict";
 
 /*
 * Instructions message for the game
@@ -9,188 +7,89 @@ window.onload = function() {
     window.location.href = "#popUp";
 }
 
-// Helper class
-var Helper = function(){}
-
-// Random Value
-Helper.returnRandomValue = function(possibleValues){
-    var randomStartingPosition = Math.floor(Math.random() * possibleValues.length);
-    return possibleValues[randomStartingPosition];
+// Random Numbers
+function getRandomInt(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
 }
 
-// Checking two elements which overlap or touch
-Helper.overlap = function(fig1, player){
-    return !(
-        player.x + fig1.xoffset > (fig1.x + fig1.width)
-        (player.x + player.width - fig1.xoffset) < fig1.x
-        player.y + (player.height - fig1.yoffset) < (fig1.y)
-        player.y > (fig1.y + (fig1.height - fig1.yoffset))
-    )
-}
-
-// Checking if two elements are in the same block
-Helper.sameBlock = function(fig1, player){
-    var fig1Row = Helper.getRow(fig1);
-    var fig1Col = Helper.getCol(fig1);
-    var playerRow = Helper.getRow(player);
-    var playerCol = Helper.getCol(player);
-    if (fig1Row == playerRow && fig1Col == playerCol){
-        return true;
-    }
-}
-
-// Calculates Row Number
-Helper.getRow = function(element){
-    var row;
-    if ((element.y + element.height/2) <= 85){
-        row = 0;
-    }
-    if((element.y + element.height/2) > 85 && (element.y + element.height/2) <= 170){
-        row = 1;
-    }
-    if((element.y + element.height/2) > 170 && (element.y + element.height/2) <= 255){
-        row = 2;
-    }
-    if((element.y + element.height/2) > 255 && (element.y + element.height/2) <= 340){
-        row = 3;
-    }
-    if((element.y + element.height/2) > 340 && (element.y + element.height/2) <= 425){
-        row = 4;
-    }
-    if((element.y + element.height/2) > 425){
-        row = 5;
-    }
-    return row;
-}
-
-// Calculates Column Number
-Helper.getCol = function(element){
-    var col;
-    if(element.x < 100){
-        col = 0;
-    }
-    if(element.x >= 100 && element.x < 200){
-        col = 1;
-    }
-    if(element.x >= 200 && element.x < 300){
-        col = 2;
-    }
-    if(element.x >= 300 && element.x < 400){
-        col = 3;
-    }
-    if(element.x >= 400){
-        col = 4;
-    }
-    return col;
-}
-
-// Enemies our player must avoid
-var Enemy = function() {
-    this.sprite = 'images/enemy-bug.png';
-    this.x = 0;
-    if(score >= 100){
-        this.y = Helper.returnRandomValue([60, 145, 230, 315]);
-    } else {
-        this.y = Helper.returnRandomValue([60, 145, 230]);
-    }
-    this.width = 171;
-    this.height = 101;
-    if(score >= 200){
-        this.speed = Helper.returnRandomValue([250, 300, 350, 400, 500]);
-    } else {
-        this.speed = Helper.returnRandomValue([200, 250, 280, 300, 320, 350, 400]);
-    }
-    this.yoffset = 50;
-    this.xoffset = 100;
+// Enemies
+var Enemy = function(x, y) {
+    this.x = x;
+    this.y = y;
+    this.speed = getRandomInt(1, 5);
+    this.width = 50;
+    this.height = 85;
+    this.image = 'images/enemy-bug.png';
 };
 
-// Update the enemy's position, required method for game
-// Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
-    this.x += (this.speed) * dt;
-
-    // check for coliision
-    allEnemies.forEach(function(enemy,index) {
-        if(Helper.overlap(enemy, player)){
-            player.y = 380;
-        }
-    })
-};
-
-// Generating Enemies
-Enemy.generateEnemies = function(){
-    allEnemies.push(new Enemy());
-    Enemy.removeOffScreenEnemies();
-    var delay;
-    if(score >= 200){
-        delay = Helper.returnRandomValue([0, 200, 500, 750]);
+    if(this.x > 600) {
+        this.x = -75;
     } else {
-        delay = Helper.returnRandomValue([0, 500, 750, 1000]);
+        this.x += 75 * this.speed * dt;
     }
-    setTimeout(Enemy.generateEnemies, delay);
-}
-
-Enemy.removeOffScreenEnemies = function(){
-    allEnemies.forEach(function(enemy, index){
-        if(enemy.x > 505){
-            allEnemies.splice(index, 1);
-        }
-    });
-}
-
-// Player Object
-var Player = function(){
-    this.playerIcon = 'images/char-boy.png';
-    this.x = Helper.returnRandomValue([0, 100, 200, 300, 400]);
-    this.y = 380;
-    this.width = 171;
-    this.height = 101;
-}
-
-// Draw the enemy on the screen, required method for game
-Enemy.prototype.render = function() {
-    ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
 };
 
-Player.prototype.render = function(){
-    ctx.drawImage(Resources.get(this.playerIcon), this.x, this.y);
-}
+Enemy.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.image), this.x, this.y);
+};
 
-// Moving player
-Player.prototype.handleInput = function(keyCode){
-    if(keyCode === 'left'){
-        if(this.x - 101 < 0){
-            this.x = 0;
-        } else {
-            this.x -= 100;
-        }
-    } else if(keyCode == 'up'){
-        if(this.y - 85 < 0){
-            this.y = 380;
-        } else {
-            this.y -= 85;
-        }
-    } else if(keyCode == 'right'){
-        if(this.x + 101 > 400){
-            this.x = 400;
-        } else {
-            this.x += 100;
-        }
-    } else if(keyCode == 'down') {
-        if(this.y + 85 > 380){
-            this.y = 380;
-        } else {
-            this.y += 85;
-        }
+// Player
+var Player = function(x, y) {
+    this.image = 'images/char-boy.png';
+    this.x = x;
+    this.y = y;
+    this.width = 50;
+    this.height = 85;
+};
+
+Player.prototype.update = function(dt) {
+    return this.y;
+};
+
+Player.prototype.render = function() {
+    ctx.drawImage(Resources.get(this.image), this.x, this.y);
+};
+
+Player.prototype.handleInput = function(keyCode) {
+    switch(keyCode) {
+        case "up":
+            if(this.y > -35) {
+                this.y -= 85;
+            }
+        break;
+        case "down":
+            if(this.y < 390) {
+                this.y += 85;
+            }
+        break;
+        case "right":
+            if(this.x < 400 ) {
+                this.x += 100;
+            }
+        break;
+        case "left":
+            if(this.x > 0) {
+                this.x -= 100;
+            }
+        break;
     }
-}
+};
 
-// Initiate Game
-Enemy.generateEnemies();
-player = new Player();
 
-// This listens for key presses and sends the keys to your
-// Player.handleInput() method. You don't need to modify this.
+// Instantiate objects
+var enemy_lineOne_1   = new Enemy(0, 50);
+var enemy_lineOne_2   = new Enemy(-100, 50);
+var enemy_lineTwo_1   = new Enemy(-150, 135);
+var enemy_lineThree_1 = new Enemy(-300, 220);
+var enemy_lineThree_2 = new Enemy(-400, 220);
+const allEnemies = [enemy_lineOne_1, enemy_lineOne_2, enemy_lineTwo_1, enemy_lineThree_1, enemy_lineThree_2];
+const player = new Player(200, 390);
+
+
+// Keys to play the game
 document.addEventListener('keyup', function(e) {
     var allowedKeys = {
         37: 'left',
