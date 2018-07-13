@@ -26,9 +26,9 @@ var Enemy = function(x, y) {
 
 Enemy.prototype.update = function(dt) {
     if(this.x > 600) {
-        this.x = -75;
+        this.x = -100;
     } else {
-        this.x += 75 * this.speed * dt;
+        this.x += 100 * this.speed * dt;
     }
 };
 
