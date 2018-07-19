@@ -1,18 +1,16 @@
-"use strict";
-
 /*
 * Instructions message for the game
 */
 window.onload = function() {
     window.location.href = "#popUp";
-}
+};
 
 // Random Numbers
 function getRandomInt(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min)) + min;
-}
+};
 
 // Enemies
 var Enemy = function(x, y) {
